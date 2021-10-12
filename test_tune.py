@@ -209,15 +209,13 @@ config = {
     "batch_size": tune.choice([2, 4, 8, 16, 32])
 }
 
-
-
 if args.oop:
     trainable = Trainer
 else:
     trainable = partial(train_model, epochs=epochs)
-    
+
 analysis = tune.run(
-    Trainer,
+    trainable,
     local_dir=local_dir,
     name=exp_name,
     stop={"training_iteration": epochs},
