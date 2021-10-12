@@ -12,7 +12,7 @@ from sklearn.model_selection import train_test_split
 
 import ray
 from ray import tune
-from ray.tune.suggest.hyperopt import HyperOptSearch
+# from ray.tune.suggest.hyperopt import HyperOptSearch
 
 
 def seed_everything(seed=1234):
@@ -221,7 +221,7 @@ if args.oop:
         checkpoint_freq=checkpoint_freq,
         checkpoint_at_end=True,
         max_failures=5,
-        search_alg=HyperOptSearch(metric="accuracy", mode="max")
+        # search_alg=HyperOptSearch(metric="accuracy", mode="max")
     )
 else:
     analysis = tune.run(
@@ -235,7 +235,7 @@ else:
         checkpoint_freq=checkpoint_freq,
         checkpoint_at_end=True,
         max_failures=5,
-        search_alg=HyperOptSearch(metric="accuracy", mode="max")
+        # search_alg=HyperOptSearch(metric="accuracy", mode="max")
     )
 
 print("best config: ", analysis.get_best_config(metric="accuracy", mode="max"))
