@@ -209,33 +209,25 @@ config = {
     "batch_size": tune.choice([2, 4, 8, 16, 32])
 }
 
+
+
 if args.oop:
-    analysis = tune.run(
-        Trainer,
-        local_dir=local_dir,
-        name=exp_name,
-        stop={"training_iteration": epochs},
-        config=config,
-        resources_per_trial={"cpu": cpus_per_trial, "gpu": gpus_per_trial},
-        num_samples=num_samples,
-        checkpoint_freq=checkpoint_freq,
-        checkpoint_at_end=True,
-        max_failures=5,
-        # search_alg=HyperOptSearch(metric="accuracy", mode="max")
-    )
+    trainable = Trainer
 else:
-    analysis = tune.run(
-        partial(train_model, epochs=epochs),
-        local_dir="checkpoints",
-        name=exp_name,
-        stop={"training_iteration": epochs},
-        config=config,
-        resources_per_trial={"cpu": cpus_per_trial, "gpu": gpus_per_trial},
-        num_samples=num_samples,
-        checkpoint_freq=checkpoint_freq,
-        checkpoint_at_end=True,
-        max_failures=5,
-        # search_alg=HyperOptSearch(metric="accuracy", mode="max")
+    trainable = partial(train_model, epochs=epochs)
+    
+analysis = tune.run(
+    Trainer,
+    local_dir=local_dir,
+    name=exp_name,
+    stop={"training_iteration": epochs},
+    config=config,
+    resources_per_trial={"cpu": cpus_per_trial, "gpu": gpus_per_trial},
+    num_samples=num_samples,
+    checkpoint_freq=checkpoint_freq,
+    checkpoint_at_end=True,
+    max_failures=5,
+    # search_alg=HyperOptSearch(metric="accuracy", mode="max")
     )
 
 print("best config: ", analysis.get_best_config(metric="accuracy", mode="max"))
