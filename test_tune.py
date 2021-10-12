@@ -128,6 +128,8 @@ class Trainer(tune.Trainable):
 
         if torch.cuda.is_available():
             self.device = "cuda"
+        else:
+            self.device = "cpu"
         self.train_loader, self.val_loader = get_data_loaders(self.batch_size)
         nin = self.train_loader.dataset.ndim
         nout = self.train_loader.dataset.n_classes
