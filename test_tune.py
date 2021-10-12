@@ -167,8 +167,8 @@ def train_model(config, epochs):
     model.to(device)
     optimizer = torch.optim.SGD(model.parameters(), lr=config["lr"])
     for epoch in range(epochs):
-        train(model, optimizer, train_loader, torch.device("cpu"))
-        loss, acc = evaluate(model, val_loader, torch.device("cpu"))
+        train(model, optimizer, train_loader, device)
+        loss, acc = evaluate(model, val_loader, device)
         tune.report(loss=loss, accuracy=acc)
     return
 
