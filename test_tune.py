@@ -159,7 +159,12 @@ def train_model(config, epochs):
     train_loader, val_loader = get_data_loaders(config["batch_size"])
     nin = train_loader.dataset.ndim
     nout = train_loader.dataset.n_classes
+    if torch.cuda.is_available():
+        device = "cuda"
+    else:
+        device = "cpu"
     model = MLP(nin, config["nh1"], config["nh2"], nout)
+    model.to(device)
     optimizer = torch.optim.SGD(model.parameters(), lr=config["lr"])
     for epoch in range(epochs):
         train(model, optimizer, train_loader, torch.device("cpu"))
