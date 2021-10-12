@@ -185,7 +185,7 @@ print(args)
 
 epochs = args.epochs
 gpus_per_trial = 0
-cpus_per_trial = 2
+cpus_per_trial = 4
 num_samples = args.num_samples
 num_cpus = 12
 num_gpus = 0
