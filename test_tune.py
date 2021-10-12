@@ -176,13 +176,14 @@ seed_everything()
 parser = argparse.ArgumentParser(description="test_tune")
 parser.add_argument("--gpu", action="store_true", help="use gpu (default False)")
 parser.add_argument("--oop", action="store_true", help="oop setting (default False)")
+parser.add_argument("--num_samples", type=int, default=2, help="number of samples (default 2)")
 args = parser.parse_args()
 print(args)
 
 epochs = 2
 gpus_per_trial = 0
 cpus_per_trial = 2
-num_samples = 2
+num_samples = args.num_samples
 num_cpus = 4
 num_gpus = 0
 local_dir = "runs"
