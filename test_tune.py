@@ -1,18 +1,24 @@
+# imports for the model and data handling
 import torch
 from torch.utils.data import Dataset
 from torch.utils.data import DataLoader
-import numpy as np
-import os
-import argparse
-from functools import partial
-import random
 
+# imports for the data used in this program
 from sklearn.datasets import load_digits
 from sklearn.model_selection import train_test_split
+import numpy as np
 
+# imports for ray
 import ray
 from ray import tune
-# from ray.tune.suggest.hyperopt import HyperOptSearch
+from ray.tune.suggest.hyperopt import HyperOptSearch
+
+from functools import partial
+
+# other imports
+import os
+import argparse
+import random
 
 
 def seed_everything(seed=1234):
@@ -190,19 +196,21 @@ print(args)
 
 epochs = args.epochs
 gpus_per_trial = 0
-cpus_per_trial = 4
+cpus_per_trial = 6
 num_samples = args.num_samples
 num_cpus = 12
 num_gpus = 0
 local_dir = "runs"
 exp_name = "test_cpu"
 checkpoint_freq = int(epochs / 10)
+max_failures = 5
+checkpoint_at_end = True
 
 if args.gpu:
-    gpu_ids = [1, 2, 3]
+    gpu_ids = [2, 3]
     set_gpu_id(gpu_ids)
     gpus_per_trial = 1
-    num_gpus = 3
+    num_gpus = 2
     exp_name = "test_gpu"
 
 ray.init(num_cpus=num_cpus, num_gpus=num_gpus)
@@ -228,8 +236,8 @@ analysis = tune.run(
     resources_per_trial={"cpu": cpus_per_trial, "gpu": gpus_per_trial},
     num_samples=num_samples,
     checkpoint_freq=checkpoint_freq,
-    checkpoint_at_end=True,
-    max_failures=5,
+    checkpoint_at_end=checkpoint_at_end,
+    max_failures=max_failures,
     # search_alg=HyperOptSearch(metric="accuracy", mode="max")
     )
 
